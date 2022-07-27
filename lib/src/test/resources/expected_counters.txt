@@ -1,0 +1,3 @@
+com.android.internal.os.ZygoteInit:main=4
+- com.android.internal.os.RuntimeInit$MethodAndArgsCaller:run=4
+kotlinx.coroutines.scheduling.CoroutineScheduler$Worker:run=3
