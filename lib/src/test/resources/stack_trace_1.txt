@@ -1,0 +1,16 @@
+com.lemnik.stitchart.Billing$ensureConnected$2$1:onBillingSetupFinished
+com.android.billingclient.api.BillingClientImpl:startConnection
+com.lemnik.stitchart.Billing:ensureConnected
+com.lemnik.stitchart.Billing$checkBillingStatus$2:invokeSuspend
+com.lemnik.stitchart.Billing$checkBillingStatus$2:invoke
+kotlinx.coroutines.intrinsics.UndispatchedKt:startUndispatchedOrReturn
+kotlinx.coroutines.BuildersKt__Builders_commonKt:withContext
+kotlinx.coroutines.BuildersKt:withContext
+com.lemnik.stitchart.Billing:checkBillingStatus
+com.lemnik.stitchart.Billing$checkBillingStatusAsync$1:invokeSuspend
+kotlin.coroutines.jvm.internal.BaseContinuationImpl:resumeWith
+kotlinx.coroutines.DispatchedTask:run
+kotlinx.coroutines.scheduling.CoroutineScheduler:runSafely
+kotlinx.coroutines.scheduling.CoroutineScheduler$Worker:executeTask
+kotlinx.coroutines.scheduling.CoroutineScheduler$Worker:runWorker
+kotlinx.coroutines.scheduling.CoroutineScheduler$Worker:run

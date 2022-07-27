@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    tools:context=".MainActivity">
+
+    <ViewFlipper
+        android:id="@+id/textAnimation"
+        android:flipInterval="3000"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inAnimation="@android:anim/fade_in"
+        android:outAnimation="@android:anim/fade_out">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="There is some text"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="You found the hidden text"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+    </ViewFlipper>
+
+    <Button
+        android:id="@+id/runAnimation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Run Animation" />
+
+    <Button
+        android:id="@+id/almostANR"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Almost ANR" />
+
+    <Button
+        android:id="@+id/anr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Java ANR" />
+
+    <Button
+        android:id="@+id/triggerError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Trigger Error" />
+</LinearLayout>

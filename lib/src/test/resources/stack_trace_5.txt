@@ -1,0 +1,17 @@
+android.os.Parcel:createExceptionOrNull
+android.os.Parcel:createException
+android.os.Parcel:readException
+android.database.DatabaseUtils:readExceptionFromParcel
+android.database.DatabaseUtils:readExceptionFromParcel
+android.content.ContentProviderProxy:insert
+android.content.ContentResolver:insert
+android.content.ContentResolver:insert
+com.lemnik.stitchart.util.export.AbstractSaveImageFragment:insertAsImage
+com.lemnik.stitchart.util.export.AbstractSaveImageFragment:access$insertAsImage
+com.lemnik.stitchart.util.export.AbstractSaveImageFragment$saveImage$2:invokeSuspend
+kotlin.coroutines.jvm.internal.BaseContinuationImpl:resumeWith
+kotlinx.coroutines.DispatchedTask:run
+kotlinx.coroutines.scheduling.CoroutineScheduler:runSafely
+kotlinx.coroutines.scheduling.CoroutineScheduler$Worker:executeTask
+kotlinx.coroutines.scheduling.CoroutineScheduler$Worker:runWorker
+kotlinx.coroutines.scheduling.CoroutineScheduler$Worker:run
