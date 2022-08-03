@@ -112,19 +112,16 @@ internal class SlowLooperMonitorThread(
         pingLooper()
 
         while (state != STATE_STOPPED) {
-            if (state != STATE_SAMPLING) {
-                when (state) {
-                    STATE_PING -> {
-                        state = STATE_WAITING_FOR_ALARM
-                        clearSamplingGraph()
-                        pingLooper()
-                    }
-                    STATE_WAITING_FOR_ALARM -> if (waitForSamplingAlarm()) {
-                        startSampling()
-                    }
+            when (state) {
+                STATE_PING -> {
+                    state = STATE_WAITING_FOR_ALARM
+                    clearSamplingGraph()
+                    pingLooper()
                 }
-            } else {
-                recordStackSample()
+                STATE_WAITING_FOR_ALARM -> if (waitForSamplingAlarm()) {
+                    startSampling()
+                }
+                STATE_SAMPLING -> recordStackSample()
             }
 
             if (state == STATE_SAMPLING) {
@@ -162,8 +159,8 @@ internal class SlowLooperMonitorThread(
 
         /*
          * Thread.getStackTrace is *extremely* expensive in the scheme of things since the thread
-         * being checked must first be suspended, then the stack can be unwound, and the thread
-         * can only then be resumed.
+         * being checked must first be suspended, then the stack can be unwound, and only then
+         * can the thread be resumed.
          *
          * The stack unwind itself does (at the time of writing) appear to include some level
          * of caching, but at the time of writing the String values returned don't appear to have
@@ -233,7 +230,7 @@ internal class SlowLooperMonitorThread(
     private fun clearSamplingGraph() {
         // only replace the root sample node if it's got data, otherwise leave it alone
         if (root.isNotEmpty) {
-            breadcrumbs.onSamplerStopped()
+            breadcrumbs.onSamplerStopped(root)
             // replace the "previous" with whatever we just finished recording
             previousSampleGraph = root
 

@@ -31,7 +31,8 @@ android {
 }
 
 dependencies {
-    implementation 'com.bugsnag:bugsnag-android-core:5.17.0'
+    // we need at least v5.22.0 where Bugsnag.isStarted was introduced
+    implementation 'com.bugsnag:bugsnag-android-core:5.22.0'
 
     testImplementation 'junit:junit:4.13.2'
 

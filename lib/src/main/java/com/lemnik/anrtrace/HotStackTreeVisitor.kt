@@ -20,7 +20,7 @@ class HotStackTreeVisitor @JvmOverloads constructor(
     }
 
     override fun end(metadata: MutableMap<String, Any>, token: HotStackTraceFrame?) {
-        metadata["Stack Trace"] = LinkedList<String>().apply {
+        metadata["Hot Stack Trace"] = LinkedList<String>().apply {
             var frame = token?.child
 
             while (frame != null) {
@@ -47,9 +47,11 @@ class HotStackTreeVisitor @JvmOverloads constructor(
                 estimatedTimeNs,
                 parent
             )
+
+            return parent.child
         }
 
-        return lChild
+        return null
     }
 
     override fun visitLeaf(
@@ -59,12 +61,16 @@ class HotStackTreeVisitor @JvmOverloads constructor(
         estimatedTimeNs: Long,
         parent: HotStackTraceFrame?
     ) {
-        parent?.child = HotStackTraceFrame(
-            buildNodeName(className, methodName),
-            callCount,
-            estimatedTimeNs,
-            parent
-        )
+        val lChild = parent?.child
+
+        if (lChild == null || lChild.callCount < callCount) {
+            parent?.child = HotStackTraceFrame(
+                buildNodeName(className, methodName),
+                callCount,
+                estimatedTimeNs,
+                parent
+            )
+        }
     }
 
     private fun buildNodeName(className: String, methodName: String) =
@@ -81,8 +87,7 @@ class HotStackTreeVisitor @JvmOverloads constructor(
         var estimatedTimeNs: Long,
         var parent: HotStackTraceFrame? = null,
         var child: HotStackTraceFrame? = null,
-    ) : Comparable<HotStackTraceFrame> {
-        override fun compareTo(other: HotStackTraceFrame) = callCount.compareTo(other.callCount)
+    ) {
         override fun toString(): String {
             return buildString {
                 append(name)

@@ -17,11 +17,11 @@ approaching a flame graph and add it to the Bugsnag Event metadata.
 The project can be included in your Android app Gradle config using [Jitpack](https://jitpack.io):
 
 ```groovy
-    allprojects {
-    repositories {
-        // ...
-        maven { url 'https://jitpack.io' }
-    }
+allprojects {
+  repositories {
+    // ...
+    maven { url 'https://jitpack.io' }
+  }
 }
 ```
 
@@ -29,13 +29,13 @@ Add the dependency to your `app/build.gradle`:
 
 ```groovy
 dependencies {
-    // ...
-    implementation 'com.github.lemnik:bugsnag-anr-trace:0.0.1'
+  // ...
+  implementation 'com.github.lemnik:bugsnag-anr-trace:0.0.1'
 }
 ```
 
 Then instantiate the Plugin when you start Bugsnag:
-
+(at least)
 ```kotlin
 Bugsnag.start(Configuration().apply {
     plugins = listOf(
