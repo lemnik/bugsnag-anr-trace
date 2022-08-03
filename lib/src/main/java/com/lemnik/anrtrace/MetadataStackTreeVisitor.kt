@@ -19,8 +19,8 @@ class MetadataStackTreeVisitor constructor(
         return hashMapOf()
     }
 
-    override fun end(metadata: MutableMap<String, Any>, token: MutableMap<String, Any>) {
-        metadata.putAll(token)
+    override fun end(token: MutableMap<String, Any>, addMetadata: (String, Any) -> Unit) {
+        token.forEach { (key, value) -> addMetadata(key, value) }
     }
 
     override fun openBranch(

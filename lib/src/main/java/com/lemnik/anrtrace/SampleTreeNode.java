@@ -100,6 +100,10 @@ class SampleTreeNode {
         }
     }
 
+    public SampleTreeNode single() {
+        return children instanceof SampleTreeNode ? (SampleTreeNode) children : this;
+    }
+
     static SampleTreeNode tableLookup(SampleTreeNode[] table, String className, String methodName) {
         final int mask = table.length - 1;
         final int hashCode = hashCodeFor(className, methodName);

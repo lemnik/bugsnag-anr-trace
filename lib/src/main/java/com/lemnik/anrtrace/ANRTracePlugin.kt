@@ -100,16 +100,9 @@ class ANRTracePlugin @JvmOverloads constructor(
         stackTreeVisitor: StackTreeVisitor<E>,
     ) {
         val root = stackTreeVisitor.begin()
-        samples.accept(stackTreeVisitor, root)
-
-        // force the ANR section to be created on the Event
-        event.addMetadata("ANR", "#sentinelValue", "")
+        samples.single().accept(stackTreeVisitor, root)
 
         // populate the ANR section
-        val anrMetadata = event.getMetadata("ANR") as MutableMap<String, Any>
-        stackTreeVisitor.end(anrMetadata, root)
-
-        // remove our sentinel value
-        anrMetadata.remove("#sentinelValue")
+        stackTreeVisitor.end(root) { key, value -> event.addMetadata("ANR", key, value) }
     }
 }

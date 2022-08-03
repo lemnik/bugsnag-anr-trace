@@ -40,9 +40,9 @@ data class ANRBreadcrumbOptions @JvmOverloads constructor(
     ): Map<String, Any> {
         val metadata = HashMap<String, Any>()
         val root = visitor.begin()
-        sampleTreeRoot.accept(visitor, root)
+        sampleTreeRoot.single().accept(visitor, root)
 
-        visitor.end(metadata, root)
+        visitor.end(root, metadata::put)
 
         return metadata
     }

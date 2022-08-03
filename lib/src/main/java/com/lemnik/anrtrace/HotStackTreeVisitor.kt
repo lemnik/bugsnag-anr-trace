@@ -19,15 +19,18 @@ class HotStackTreeVisitor @JvmOverloads constructor(
         return HotStackTraceFrame("", 0L, 0L)
     }
 
-    override fun end(metadata: MutableMap<String, Any>, token: HotStackTraceFrame?) {
-        metadata["Hot Stack Trace"] = LinkedList<String>().apply {
-            var frame = token?.child
+    override fun end(token: HotStackTraceFrame?, addMetadata: (String, Any) -> Unit) {
+        addMetadata(
+            "Hot Stack Trace",
+            LinkedList<String>().apply {
+                var frame = token?.child
 
-            while (frame != null) {
-                add(frame.toString())
-                frame = frame.child
-            }
-        }
+                while (frame != null) {
+                    add(frame.toString())
+                    frame = frame.child
+                }
+            },
+        )
     }
 
     override fun openBranch(

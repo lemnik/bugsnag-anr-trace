@@ -22,8 +22,10 @@ interface StackTreeVisitor<E> {
     /**
      * End a single graph walk and attach the final data to the given metadata object. [token] is the
      * value returned from the corresponding [begin] call.
+     *
+     * @param addMetadata a function to add metadata to the appropriate model entity (Event or Breadcrumb)
      */
-    fun end(metadata: MutableMap<String, Any>, token: E)
+    fun end(token: E, addMetadata: (key: String, value: Any) -> Unit)
 
     fun openBranch(
         className: String,

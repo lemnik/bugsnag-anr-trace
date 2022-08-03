@@ -23,7 +23,7 @@ class HotStackTreeVisitorTest {
 
         visitor.closeBranch(main, root)
 
-        val stack = HashMap<String, Any>().also { map -> visitor.end(map, root) }.values.first()
+        val stack = HashMap<String, Any>().also { map -> visitor.end(root, map) }.values.first()
 
         Assert.assertEquals(
             listOf(
