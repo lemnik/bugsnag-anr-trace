@@ -72,7 +72,7 @@ internal class SlowLooperMonitorThread(
      */
 
     @Volatile
-    private var root = SampleTreeNode("", "")
+    private var root = SampleTreeNode("", "", -1)
 
     private var previousSampleGraph: SampleTreeNode? = null
 
@@ -175,7 +175,7 @@ internal class SlowLooperMonitorThread(
         for (index in stackSample.indices.reversed()) {
             val element = stackSample[index]
 
-            node = node.child(element.className, element.methodName)
+            node = node.child(element.className, element.methodName, element.lineNumber)
             node.counter++
             node.totalTimeNs += timeSinceLastSample
         }
@@ -234,7 +234,7 @@ internal class SlowLooperMonitorThread(
             // replace the "previous" with whatever we just finished recording
             previousSampleGraph = root
 
-            root = SampleTreeNode("", "")
+            root = SampleTreeNode("", "", -1)
         }
     }
 

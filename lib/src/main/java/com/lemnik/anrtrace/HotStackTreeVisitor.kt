@@ -36,6 +36,7 @@ class HotStackTreeVisitor @JvmOverloads constructor(
     override fun openBranch(
         className: String,
         methodName: String,
+        lineNumber: Int,
         callCount: Long,
         estimatedTimeNs: Long,
         parent: HotStackTraceFrame?
@@ -45,7 +46,7 @@ class HotStackTreeVisitor @JvmOverloads constructor(
 
         if (lChild == null || lChild.callCount < callCount) {
             parent.child = HotStackTraceFrame(
-                buildNodeName(className, methodName),
+                buildNodeName(className, methodName, lineNumber.toString()),
                 callCount,
                 estimatedTimeNs,
                 parent
@@ -60,6 +61,7 @@ class HotStackTreeVisitor @JvmOverloads constructor(
     override fun visitLeaf(
         className: String,
         methodName: String,
+        lineNumber: Int,
         callCount: Long,
         estimatedTimeNs: Long,
         parent: HotStackTraceFrame?
@@ -68,7 +70,7 @@ class HotStackTreeVisitor @JvmOverloads constructor(
 
         if (lChild == null || lChild.callCount < callCount) {
             parent?.child = HotStackTraceFrame(
-                buildNodeName(className, methodName),
+                buildNodeName(className, methodName, lineNumber.toString()),
                 callCount,
                 estimatedTimeNs,
                 parent
@@ -76,11 +78,14 @@ class HotStackTreeVisitor @JvmOverloads constructor(
         }
     }
 
-    private fun buildNodeName(className: String, methodName: String) =
-        StringBuilder(className.length + methodName.length + 1)
+    private fun buildNodeName(className: String, methodName: String, lineNumber: String) =
+        StringBuilder(className.length + methodName.length + lineNumber.length + 2)
             .also { builder ->
                 classNameFormat(builder, className)
-                builder.append('.').append(methodName)
+                builder.append('.')
+                    .append(methodName)
+                    .append(':')
+                    .append(lineNumber)
             }
             .toString()
 

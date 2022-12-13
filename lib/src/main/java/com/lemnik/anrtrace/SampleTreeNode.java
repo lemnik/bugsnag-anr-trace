@@ -34,11 +34,17 @@ class SampleTreeNode {
      * it is `intern`ed and will == other `className`s
      */
     final String className;
+
     /**
      * Method name of the stack frame - must be captured directly from the VM context so that
      * it is `intern`ed and will == other `methodName`s
      */
     final String methodName;
+
+    /**
+     * Method line number of the stack frame
+     */
+    final int lineNumber;
 
     /**
      * Cached hashCode generated in the constructor by [hashCodeFor].
@@ -57,23 +63,26 @@ class SampleTreeNode {
 
     long totalTimeNs = 0;
 
-    SampleTreeNode(@NonNull String className, @NonNull String methodName) {
+    SampleTreeNode(@NonNull String className, @NonNull String methodName, int lineNumber) {
         this.className = className.intern();
         this.methodName = methodName.intern();
-        this.hash = hashCodeFor(className, methodName);
+        this.lineNumber = lineNumber;
+        this.hash = hashCodeFor(className, methodName, lineNumber);
     }
 
-    SampleTreeNode child(String className, String methodName) {
+    SampleTreeNode child(String className, String methodName, int lineNumber) {
         if (children == null) {
-            SampleTreeNode child = new SampleTreeNode(className, methodName);
+            SampleTreeNode child = new SampleTreeNode(className, methodName, lineNumber);
             children = child;
             return child;
         } else if (children instanceof SampleTreeNode) {
             SampleTreeNode child = (SampleTreeNode) children;
-            if (child.className.equals(className) && child.methodName.equals(methodName)) {
+            if (child.className.equals(className) &&
+                    child.methodName.equals(methodName) &&
+                    child.lineNumber == lineNumber) {
                 return child;
             } else {
-                SampleTreeNode newChild = new SampleTreeNode(className, methodName);
+                SampleTreeNode newChild = new SampleTreeNode(className, methodName, lineNumber);
                 // start the table at size 2
                 SampleTreeNode[] table = new SampleTreeNode[2];
                 tableInsert(table, child);
@@ -84,10 +93,10 @@ class SampleTreeNode {
             }
         } else {
             SampleTreeNode[] table = (SampleTreeNode[]) children;
-            SampleTreeNode child = tableLookup(table, className, methodName);
+            SampleTreeNode child = tableLookup(table, className, methodName, lineNumber);
 
             if (child == null) {
-                child = new SampleTreeNode(className, methodName);
+                child = new SampleTreeNode(className, methodName, lineNumber);
                 while (!tableInsert(table, child)) {
                     // double the size of the table and rehash everything
                     table = tableRehash(table);
@@ -104,9 +113,14 @@ class SampleTreeNode {
         return children instanceof SampleTreeNode ? (SampleTreeNode) children : this;
     }
 
-    static SampleTreeNode tableLookup(SampleTreeNode[] table, String className, String methodName) {
+    static SampleTreeNode tableLookup(
+            SampleTreeNode[] table,
+            String className,
+            String methodName,
+            int lineNumber
+    ) {
         final int mask = table.length - 1;
-        final int hashCode = hashCodeFor(className, methodName);
+        final int hashCode = hashCodeFor(className, methodName, lineNumber);
         int index = hashCode & mask;
 
         SampleTreeNode node = table[index];
@@ -197,14 +211,30 @@ class SampleTreeNode {
     <E> void accept(@NonNull StackTreeVisitor<E> walker, @Nullable E parent) {
         Object c = children;
         if (c == null) {
-            walker.visitLeaf(className, methodName, counter, totalTimeNs, parent);
+            walker.visitLeaf(className, methodName, lineNumber, counter, totalTimeNs, parent);
         } else if (c instanceof SampleTreeNode) {
-            E token = walker.openBranch(className, methodName, counter, totalTimeNs, parent);
+            E token = walker.openBranch(
+                    className,
+                    methodName,
+                    lineNumber,
+                    counter,
+                    totalTimeNs,
+                    parent
+            );
+
             ((SampleTreeNode) c).accept(walker, token);
             walker.closeBranch(token, parent);
         } else {
             SampleTreeNode[] table = (SampleTreeNode[]) c;
-            E token = walker.openBranch(className, methodName, counter, totalTimeNs, parent);
+            E token = walker.openBranch(
+                    className,
+                    methodName,
+                    lineNumber,
+                    counter,
+                    totalTimeNs,
+                    parent
+            );
+
             for (SampleTreeNode node : table) {
                 if (node != null) {
                     node.accept(walker, token);
@@ -215,8 +245,12 @@ class SampleTreeNode {
         }
     }
 
-    private static int hashCodeFor(@NonNull String className, @NonNull String methodName) {
-        return className.hashCode() ^ methodName.hashCode();
+    private static int hashCodeFor(
+            @NonNull String className,
+            @NonNull String methodName,
+            int lineNumber
+    ) {
+        return className.hashCode() ^ methodName.hashCode() ^ lineNumber;
     }
 
     @Override
@@ -236,11 +270,13 @@ class SampleTreeNode {
 
         SampleTreeNode node = (SampleTreeNode) other;
         // ignore lint warnings - these strings are interned
-        return node.className.equals(className) && node.methodName.equals(methodName);
+        return node.className.equals(className) &&
+                node.methodName.equals(methodName) &&
+                node.lineNumber == lineNumber;
     }
 
     @Override
     public String toString() {
-        return className + ':' + methodName;
+        return className + ':' + ':' + methodName + ':' + lineNumber;
     }
 }

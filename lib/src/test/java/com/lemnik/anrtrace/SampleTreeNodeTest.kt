@@ -7,13 +7,13 @@ import org.junit.Test
 class SampleTreeNodeTest {
     @Test
     fun testSimpleChildStructure() {
-        val root = SampleTreeNode("", "")
-        val child1 = root.child("SampleTreeNodeTest", "testChildStructure")
-        val child2 = child1.child("SampleTreeNodeTest", "hashCode")
-        val child3 = child2.child("SampleTreeNodeTest", "hashCode")
-        val child1_ = root.child("SampleTreeNodeTest", "testChildStructure")
-        val child2_ = child1.child("SampleTreeNodeTest", "hashCode")
-        val child3_ = child2.child("SampleTreeNodeTest", "hashCode")
+        val root = SampleTreeNode("", "", -1)
+        val child1 = root.child("SampleTreeNodeTest", "testChildStructure", 1)
+        val child2 = child1.child("SampleTreeNodeTest", "hashCode", 1)
+        val child3 = child2.child("SampleTreeNodeTest", "hashCode", 1)
+        val child1_ = root.child("SampleTreeNodeTest", "testChildStructure", 1)
+        val child2_ = child1.child("SampleTreeNodeTest", "hashCode", 1)
+        val child3_ = child2.child("SampleTreeNodeTest", "hashCode", 1)
         Assert.assertSame(child1, child1_)
         Assert.assertSame(child2, child2_)
         Assert.assertSame(child3, child3_)
@@ -21,7 +21,7 @@ class SampleTreeNodeTest {
 
     @Test
     fun testStackTree() {
-        val root = SampleTreeNode("", "")
+        val root = SampleTreeNode("", "", 1)
 
         var fileNumber = 0
         do {
@@ -37,7 +37,8 @@ class SampleTreeNodeTest {
                 trace.forEach { line ->
                     frame = frame.child(
                         line.substringBefore(':').intern(),
-                        line.substringAfter(':').intern()
+                        line.substringAfter(':').intern(),
+                        1,
                     )
 
                     frame.counter++
@@ -68,6 +69,7 @@ class SampleTreeNodeTest {
             val node = stack.last().child(
                 frame.substringBefore(':').intern(),
                 frame.substringAfter(':').intern(),
+                1,
             )
 
             assertEquals(

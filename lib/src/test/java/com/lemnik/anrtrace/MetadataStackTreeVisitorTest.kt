@@ -10,21 +10,21 @@ class MetadataStackTreeVisitorTest {
     @Test
     fun testStackTree() {
         val root = hashMapOf<String, Any>()
-        val main = visitor.openBranch("com.android.internal.os.RuntimeInit", "main", 1, 3123000, root)
-        val run = visitor.openBranch("java.lang.Thread", "run", 1, 423000, main)
+        val main = visitor.openBranch("com.android.internal.os.RuntimeInit", "main", 1, 1, 3123000, root)
+        val run = visitor.openBranch("java.lang.Thread", "run", 1, 1, 423000, main)
 
-        visitor.visitLeaf("com.lemnik.FakeClass", "testMethod", 10, 10, run)
-        visitor.visitLeaf("com.lemnik.FakeClass", "testMethod2", 10, 82300, run)
+        visitor.visitLeaf("com.lemnik.FakeClass", "testMethod", 1, 10, 10, run)
+        visitor.visitLeaf("com.lemnik.FakeClass", "testMethod2", 1, 10, 82300, run)
 
         visitor.closeBranch(run, main)
         visitor.closeBranch(main, root)
 
         assertEquals(
             mapOf(
-                "com.android.internal.os.RuntimeInit.main [1 3ms]" to mapOf(
-                    "java.lang.Thread.run [1 .4ms]" to mapOf(
-                        "com.lemnik.FakeClass.testMethod" to "10 10ns",
-                        "com.lemnik.FakeClass.testMethod2" to "10 .08ms",
+                "com.android.internal.os.RuntimeInit.main:1 [1 3ms]" to mapOf(
+                    "java.lang.Thread.run:1 [1 .4ms]" to mapOf(
+                        "com.lemnik.FakeClass.testMethod:1" to "10 10ns",
+                        "com.lemnik.FakeClass.testMethod2:1" to "10 .08ms",
                     )
                 )
             ),

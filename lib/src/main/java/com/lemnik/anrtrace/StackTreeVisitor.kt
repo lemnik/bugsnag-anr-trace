@@ -30,6 +30,7 @@ interface StackTreeVisitor<E> {
     fun openBranch(
         className: String,
         methodName: String,
+        lineNumber: Int,
         callCount: Long,
         estimatedTimeNs: Long,
         parent: E
@@ -40,6 +41,7 @@ interface StackTreeVisitor<E> {
     fun visitLeaf(
         className: String,
         methodName: String,
+        lineNumber: Int,
         callCount: Long,
         estimatedTimeNs: Long,
         parent: E

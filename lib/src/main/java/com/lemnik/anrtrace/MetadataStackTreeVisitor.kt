@@ -26,24 +26,30 @@ class MetadataStackTreeVisitor constructor(
     override fun openBranch(
         className: String,
         methodName: String,
+        lineNumber: Int,
         callCount: Long,
         estimatedTimeNs: Long,
         parent: MutableMap<String, Any>
     ): MutableMap<String, Any> {
         val childNode = hashMapOf<String, Any>()
-        parent[formatNode(className, methodName, callCount, estimatedTimeNs)] = childNode
+        parent[formatNode(className, methodName, lineNumber, callCount, estimatedTimeNs)] = childNode
         return childNode
     }
 
     private fun formatNode(
         className: String,
         methodName: String,
+        lineNumber: Int,
         counter: Long,
         estimatedTimeNs: Long
     ) = buildString {
         classNameFormat(this, className)
-        append('.').append(methodName)
-            .append(' ').append('[')
+        append('.')
+            .append(methodName)
+            .append(':')
+            .append(lineNumber)
+            .append(' ')
+            .append('[')
             .append(counter)
             .append(' ')
         humanFormatTimeNs(estimatedTimeNs)
@@ -56,13 +62,14 @@ class MetadataStackTreeVisitor constructor(
     override fun visitLeaf(
         className: String,
         methodName: String,
+        lineNumber: Int,
         callCount: Long,
         estimatedTimeNs: Long,
         parent: MutableMap<String, Any>
     ) {
         val nodeName = buildString {
             classNameFormat(this, className)
-            append('.').append(methodName)
+            append('.').append(methodName).append(':').append(lineNumber)
         }
 
         parent[nodeName] = buildString {
